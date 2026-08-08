@@ -1,23 +1,138 @@
 aid: binske
 name: Binske
-description: 'Binske is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  binske is a Colorado-born premium cannabis brand founded in 2015, producing
+  flower and pre-rolls, live resin and live hash rosin concentrates, vape carts
+  and all-in-ones, and edibles including chocolate bars and fruit gummies, sold
+  through licensed dispensaries as a multi-state brand across Colorado, Florida,
+  Michigan, New Jersey, New York and Washington. The company develops proprietary
+  genetics with ONI Seed Co. and built its chocolate line around rare white cacao
+  sourced in Peru, with packaging art by UK artist Martin O'Neill. binske operates
+  no developer program and publishes no API of its own; its only machine-callable
+  surface is the Shopify-native Universal Commerce Protocol MCP endpoint served
+  from its direct-to-consumer storefront at shopbinske.com, which exposes catalog
+  search, cart and checkout to agents and requires explicit human approval before
+  payment.
+image: https://binske.com/wp-content/uploads/2026/01/favicon-300x300.png
 url: https://raw.githubusercontent.com/api-evangelist/binske/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-07'
 modified: '2026-08-07'
 tags:
-- Company
-apis: []
+- cannabis
+- consumer-packaged-goods
+- direct-to-consumer
+- ecommerce
+- retail
+- shopify
+- agent-commerce
+- ucp
+- mcp
+- storefront
+apis:
+- name: binske Storefront Commerce API (UCP / MCP)
+  description: >-
+    Anonymous, publicly callable MCP server on binske's direct-to-consumer
+    storefront host implementing the Universal Commerce Protocol shopping
+    service. A live JSON-RPC 2.0 tools/list returned 13 tools with full JSON
+    Schema draft 2020-12 input schemas covering catalog search and lookup,
+    product detail, cart lifecycle, checkout lifecycle and order retrieval.
+    complete_checkout carries an idempotency key and requires contemporaneous
+    buyer approval. The surface is emitted by the Shopify platform on binske's
+    behalf, not authored by binske.
+  humanURL: https://shopbinske.com/agents.md
+  baseURL: https://shopbinske.com/api/ucp/mcp
+  tags:
+  - agent-commerce
+  - ucp
+  - mcp
+  - ecommerce
+  - shopify
+  - cannabis
+  properties:
+  - type: MCPServer
+    url: mcp/binske-mcp.yml
+  - type: MCPServer
+    url: mcp/binske-mcp-tools.json
+  - type: Documentation
+    url: https://shopbinske.com/agents.md
+  - type: LLMsTxt
+    url: llms/binske-llms.txt
+  - type: Authentication
+    url: authentication/binske-authentication.yml
+  - type: OAuthScopes
+    url: scopes/binske-scopes.yml
+  - type: Conventions
+    url: conventions/binske-conventions.yml
+  - type: Idempotency
+    url: conventions/binske-conventions.yml
+  - type: DataModel
+    url: data-model/binske-data-model.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/binske-domain-security.yml
 - type: Website
+  url: https://binske.com/
+- type: Documentation
+  url: https://shopbinske.com/agents.md
+- type: MCPServer
+  url: mcp/binske-mcp.yml
+- type: LLMsTxt
+  url: llms/binske-llms.txt
+- type: WellKnown
+  url: well-known/binske-well-known.yml
+- type: Authentication
+  url: authentication/binske-authentication.yml
+- type: OAuthScopes
+  url: scopes/binske-scopes.yml
+- type: Conventions
+  url: conventions/binske-conventions.yml
+- type: Idempotency
+  url: conventions/binske-conventions.yml
+- type: Conformance
+  url: conformance/binske-conformance.yml
+- type: Lifecycle
+  url: lifecycle/binske-lifecycle.yml
+- type: DataModel
+  url: data-model/binske-data-model.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Blog
+  url: https://binske.com/explore/
+- type: BlogRSS
+  url: https://binske.com/feed/
+- type: Support
+  url: https://binske.com/contact/
+- type: TermsOfService
+  url: https://binske.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://binske.com/privacy-policy/
+- type: Store
+  url: https://shopbinske.com/
+- type: SecondaryMarket
   url: https://forgeglobal.com/binske_stock/
+x-enrichment:
+  date: '2026-08-07'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1
+x-notes:
+  api_surface_origin: >-
+    binske runs no developer program of its own. The one machine-callable surface
+    profiled here — the UCP/MCP endpoint, the /.well-known/ucp discovery
+    document, llms.txt and agents.md — is emitted by the Shopify commerce
+    platform on behalf of the store. It is recorded because it is genuinely
+    served from a binske-controlled host and genuinely callable, not because
+    binske publishes an API product. No OpenAPI, SDK, CLI, sandbox, webhook,
+    changelog, status page, security.txt or A2A agent card exists on any binske
+    host.
+  probed: '2026-08-07'
