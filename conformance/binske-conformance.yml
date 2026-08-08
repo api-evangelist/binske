@@ -1,0 +1,97 @@
+generated: '2026-08-07'
+method: probed
+source: probes of shopbinske.com and binske.com, 2026-08-07
+scope: >-
+  Cross-cutting standards asserted against the one machine-callable surface on a
+  binske-controlled host. Every conformance below is inherited from the Shopify
+  commerce platform's implementation of UCP; binske asserts no standards of its
+  own.
+standards:
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: >-
+    POST https://shopbinske.com/api/ucp/mcp with
+    {"jsonrpc":"2.0","id":1,"method":"tools/list"} returned 200 and a
+    result.tools array of 13 tools, each with a JSON Schema inputSchema.
+- id: jsonrpc-2.0
+  name: JSON-RPC 2.0
+  conforms: true
+  evidence: Response envelope carries jsonrpc "2.0", the echoed id, and a result member.
+- id: ucp
+  name: Universal Commerce Protocol
+  conforms: true
+  version: '2026-04-08'
+  evidence: >-
+    GET https://shopbinske.com/.well-known/ucp returned 200 with a ucp object
+    declaring version 2026-04-08, supported_versions, dev.ucp.shopping services,
+    eight capabilities and three payment handlers.
+- id: json-schema-2020-12
+  name: JSON Schema draft 2020-12
+  conforms: true
+  evidence: Every tool inputSchema declares $schema https://json-schema.org/draft/2020-12/schema.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: >-
+    Authorization code grant with refresh_token and jwt-bearer, client_secret_basic
+    token auth, per /.well-known/oauth-authorization-server (200).
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence: https://shopbinske.com/.well-known/oauth-authorization-server returned 200 with issuer, token_endpoint, jwks_uri.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  evidence: >-
+    https://shopbinske.com/.well-known/oauth-protected-resource returned 200 with
+    resource, authorization_servers[] and bearer_methods_supported.
+- id: rfc7636
+  name: PKCE
+  conforms: true
+  evidence: code_challenge_methods_supported includes S256.
+- id: oidc
+  name: OpenID Connect Core
+  conforms: true
+  evidence: >-
+    openid scope, RS256 id_token signing, public subject types, and the standard
+    iss/sub/aud/exp/iat/nonce/sid claim set.
+- id: rfc9116
+  name: security.txt
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on both binske.com and shopbinske.com.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json both returned 404 on
+    binske.com and shopbinske.com.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs and /redoc all
+    404 on binske.com; /openapi.json 404 on shopbinske.com. No OpenAPI is
+    published anywhere on a binske host.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: No event, streaming or webhook surface is published on a binske host.
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: The surface is JSON-RPC; errors use the JSON-RPC error member, not application/problem+json.
+- id: idempotency
+  name: Idempotent request keys
+  conforms: partial
+  evidence: >-
+    complete_checkout accepts meta.idempotency-key; no other mutating tool
+    exposes one. See conventions/binske-conventions.yml.
+certifications:
+  published: false
+  note: >-
+    binske publishes no SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP claim, and no
+    trust center. https://binske.com/compliance/ (200) is a state-by-state
+    cannabis consumer-warning page for CO, FL, MI, NJ, NY and WA — regulatory
+    consumer disclosure, not a security or privacy compliance program. No
+    `Compliance` or `TrustCenter` pointer is emitted.

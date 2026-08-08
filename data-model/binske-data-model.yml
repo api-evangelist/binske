@@ -1,0 +1,111 @@
+generated: '2026-08-07'
+method: derived
+source: mcp/binske-mcp-tools.json
+note: >-
+  Entity graph derived from the JSON Schema inputSchemas returned by a live
+  tools/list call against https://shopbinske.com/api/ucp/mcp on 2026-08-07. There
+  is no OpenAPI to derive from — these entities are read from the MCP tool
+  schemas, which are the contract for this surface. Shapes are the Universal
+  Commerce Protocol shopping model as implemented by Shopify.
+identifiers:
+  format: Shopify global ID
+  shape: 'gid://shopify/<Type>/<id>'
+  example_verbatim: 'gid://shopify/Checkout/abc123'
+entities:
+- name: Product
+  tools: [search_catalog, lookup_catalog, get_product]
+  key: catalog.id
+  fields: [id, selected, preferences]
+  note: get_product returns one product with its relevant variant set and exact pricing.
+- name: Variant
+  tools: [lookup_catalog, get_product]
+  note: Selected via catalog.selected (variant options); resolvable by identifier alongside products.
+- name: Cart
+  tools: [create_cart, get_cart, update_cart, cancel_cart]
+  key: id
+  fields: [line_items, buyer, context, attribution, fulfillment, discounts]
+- name: LineItem
+  parent: Cart, Checkout
+  field: line_items
+  cardinality: array
+- name: Buyer
+  parent: Cart, Checkout
+  field: buyer
+  fields: [email, phone_number]
+- name: Checkout
+  tools: [create_checkout, get_checkout, update_checkout, complete_checkout, cancel_checkout]
+  key: id
+  fields: [payment, line_items, buyer, context, attribution, cart_id, fulfillment, discounts]
+- name: Payment
+  parent: Checkout
+  field: payment
+  fields: [instruments]
+- name: PaymentInstrument
+  parent: Payment
+  field: instruments
+  cardinality: array
+  fields: [id, handler_id, type, billing_address]
+  required: [id, handler_id, type]
+  types: [card, token]
+- name: Address
+  parent: PaymentInstrument, Fulfillment
+  fields: [street_address, extended_address, address_locality, address_region, postal_code, address_country, first_name, last_name]
+- name: Fulfillment
+  parent: Cart, Checkout
+  field: fulfillment
+- name: Discount
+  parent: Cart, Checkout
+  field: discounts
+  note: Discount or promo codes; the schema instructs agents to prompt only if the buyer mentions one.
+- name: Order
+  tools: [get_order]
+  key: id
+  note: Produced by complete_checkout; retrievable by identifier.
+relationships:
+- from: Cart
+  to: LineItem
+  type: has_many
+  via: cart.line_items
+- from: Cart
+  to: Buyer
+  type: has_one
+  via: cart.buyer
+- from: Cart
+  to: Fulfillment
+  type: has_one
+  via: cart.fulfillment
+- from: Checkout
+  to: Cart
+  type: belongs_to
+  via: checkout.cart_id
+  note: Cart contents are carried over when cart_id is supplied to create_checkout.
+- from: Checkout
+  to: LineItem
+  type: has_many
+  via: checkout.line_items
+- from: Checkout
+  to: Payment
+  type: has_one
+  via: checkout.payment
+- from: Payment
+  to: PaymentInstrument
+  type: has_many
+  via: payment.instruments
+- from: PaymentInstrument
+  to: Address
+  type: has_one
+  via: instrument.billing_address
+- from: Checkout
+  to: Order
+  type: has_one
+  via: complete_checkout result
+- from: LineItem
+  to: Variant
+  type: belongs_to
+  via: variant identifier
+- from: Product
+  to: Variant
+  type: has_many
+  via: get_product variant set
+lifecycle:
+  path: search_catalog -> get_product -> create_cart -> create_checkout -> update_checkout -> complete_checkout -> get_order

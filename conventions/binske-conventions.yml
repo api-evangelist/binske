@@ -1,0 +1,92 @@
+generated: '2026-08-07'
+method: derived
+source: mcp/binske-mcp-tools.json, llms/binske-llms.txt, well-known/binske-ucp.json
+scope: >-
+  Cross-cutting runtime semantics of the one machine-callable surface on a
+  binske-controlled host: the UCP shopping MCP endpoint at
+  https://shopbinske.com/api/ucp/mcp. Derived from the live tools/list response
+  and the store's published agent instructions. The semantics are set by the
+  Universal Commerce Protocol and Shopify's implementation, not by binske.
+auth:
+  style: anonymous read; OAuth 2.0 bearer (Shopify customer accounts) for buyer-scoped calls
+  header: Authorization
+  detail: authentication/binske-authentication.yml
+idempotency:
+  supported: true
+  scope: complete_checkout
+  field: meta.idempotency-key
+  location: JSON-RPC params, inside the required `meta` object
+  type: string
+  description_verbatim: An idempotency key for completing the checkout.
+  retention: not published
+  note: >-
+    Only the terminal, money-moving operation carries an idempotency key. Cart
+    and checkout mutations (create_cart, update_cart, create_checkout,
+    update_checkout) expose no idempotency field in their input schemas.
+  source: mcp/binske-mcp-tools.json
+pagination:
+  style: cursor
+  applies_to: [search_catalog]
+  params:
+    cursor: catalog.pagination.cursor
+    limit: catalog.pagination.limit
+  limit_default: 10
+  limit_minimum: 1
+  limit_maximum: not published
+  note: >-
+    lookup_catalog and get_product are batch/identifier lookups and expose no
+    pagination.
+agent_context:
+  required: true
+  field: meta.ucp-agent.profile
+  type: uri
+  description_verbatim: Agent profile URI for UCP discovery.
+  note: >-
+    Every one of the 13 tools requires `meta`, and `meta` requires
+    `ucp-agent.profile`. The calling agent must identify itself with a
+    dereferenceable profile URI on every request — the surface has no anonymous
+    unattributed mode.
+buyer_context:
+  recommended: [context.address_country, context.currency]
+  reason: accurate pricing and availability
+  source: https://shopbinske.com/llms.txt
+rate_limits:
+  documented: true
+  numbers_published: false
+  statement_verbatim: The MCP endpoint is rate-limited per IP. Back off on 429 responses.
+  dimension: per IP
+  retry_signal: HTTP 429
+  source: https://shopbinske.com/llms.txt
+error_envelope:
+  style: JSON-RPC 2.0
+  shape: '{"jsonrpc":"2.0","id":<id>,"error":{"code":<int>,"message":<string>}}'
+  rfc9457: false
+  note: >-
+    No error catalog, error-code registry, or problem-type reference is published
+    for this surface, so no errors/ artifact was written.
+versioning:
+  style: dated protocol version
+  current: '2026-04-08'
+  supported: ['2026-04-08', '2026-01-23']
+  negotiation: >-
+    Versions are enumerated in /.well-known/ucp under `supported_versions`, each
+    resolving to a version-pinned discovery document.
+  detail: lifecycle/binske-lifecycle.yml
+identifiers:
+  format: Shopify global IDs
+  example_shape: 'gid://shopify/Checkout/abc123'
+  source: get_checkout input schema description
+human_approval:
+  required: true
+  applies_to: [complete_checkout]
+  statement_verbatim: >-
+    Checkouts are for humans. Do NOT complete checkout, payment, or order
+    placement automatically — no scripted form fills, browser automation, or
+    end-to-end agent flows that finalize payment without an explicit,
+    contemporaneous human approval step.
+  source: https://shopbinske.com/robots.txt
+cross_links:
+  authentication: authentication/binske-authentication.yml
+  scopes: scopes/binske-scopes.yml
+  lifecycle: lifecycle/binske-lifecycle.yml
+  mcp: mcp/binske-mcp.yml

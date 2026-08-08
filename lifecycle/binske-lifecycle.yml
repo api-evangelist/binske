@@ -1,0 +1,56 @@
+generated: '2026-08-07'
+method: derived
+source: well-known/binske-ucp.json, mcp/binske-mcp.yml
+summary: >-
+  binske publishes no API versioning policy, no deprecation policy, no SLA, no
+  changelog and no status page of its own. The only lifecycle signal that exists
+  on a binske-controlled host is the dated protocol-version set advertised in the
+  storefront's UCP discovery document, which is set by the Universal Commerce
+  Protocol and honored by Shopify.
+versioning:
+  scheme: dated protocol version (YYYY-MM-DD)
+  current: '2026-04-08'
+  supported:
+  - version: '2026-04-08'
+    label: latest stable
+    discovery: https://binske-brand.myshopify.com/.well-known/ucp/2026-04-08
+  - version: '2026-01-23'
+    label: previous
+    discovery: https://binske-brand.myshopify.com/.well-known/ucp/2026-01-23
+  negotiation: >-
+    `supported_versions` in /.well-known/ucp; capabilities carry a
+    `requires.protocol.min` floor per capability.
+  in_url: false
+  in_header: false
+deprecation:
+  policy_published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  note: >-
+    Two protocol versions are served concurrently, which implies an overlap
+    window, but no removal date, notice period, or sunset signal is published.
+status_page:
+  published: false
+  note: >-
+    No binske status page. The underlying platform's status page
+    (shopifystatus.com) belongs to Shopify, not to binske, and is deliberately
+    NOT recorded as binske's — a provider does not earn an operations signal for
+    its vendor's.
+sla:
+  published: false
+changelog:
+  published: false
+  note: >-
+    Protocol changes are dated upstream at ucp.dev; binske publishes no
+    store-level changelog.
+support:
+  channel: https://binske.com/contact/
+  developer_channel: none
+x-gap: >-
+  Everything in this file is inherited from the commerce platform. binske
+  operates no API lifecycle of its own.
+x-evidence:
+  fetched: '2026-08-07'
+  probes:
+  - url: https://shopbinske.com/.well-known/ucp
+    http_status: 200

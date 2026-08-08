@@ -1,0 +1,35 @@
+generated: '2026-08-07'
+method: probed
+source: https://shopbinske.com/.well-known/oauth-authorization-server
+authorization_server: https://shopify.com/authentication/64216269035
+protected_resource: https://shopbinske.com
+note: >-
+  Scopes are advertised by the Shopify customer-account authorization server that
+  binske's storefront delegates to via RFC 9728 protected-resource metadata.
+  binske publishes no scope reference of its own; these are read verbatim from
+  `scopes_supported` in the RFC 8414 metadata document.
+scopes:
+- name: openid
+  description: OpenID Connect — request an id_token identifying the buyer.
+  standard: true
+- name: email
+  description: Release the buyer's email address and email_verified claim.
+  standard: true
+- name: customer-account-api:full
+  description: Full access to the Shopify Customer Account API for the signed-in buyer.
+  standard: false
+- name: customer-account-mcp-api:full
+  description: >-
+    Full access to the Customer Account MCP API for the signed-in buyer — the
+    authenticated counterpart to the anonymous UCP shopping MCP endpoint.
+  standard: false
+granularity: coarse
+x-observation: >-
+  Both non-standard scopes are `:full`. There is no read/write split and no
+  per-resource scope, so an agent granted buyer access on this storefront holds
+  the whole customer-account surface.
+x-evidence:
+  fetched: '2026-08-07'
+  probes:
+  - url: https://shopbinske.com/.well-known/oauth-authorization-server
+    http_status: 200

@@ -1,0 +1,41 @@
+generated: '2026-08-07'
+method: generated
+source: mcp/binske-mcp-tools.json, https://shopbinske.com/agents.md
+note: >-
+  Skills are grounded in the 13 real MCP tool names returned by a live tools/list
+  call against https://shopbinske.com/api/ucp/mcp on 2026-08-07. There is no
+  OpenAPI on any binske host; the MCP tool schemas are the contract this skill is
+  written against. No tool name, field name or value here was invented.
+skills:
+- name: binske-agent-commerce
+  file: binske-agent-commerce.md
+  api: binske Storefront Commerce API (UCP / MCP)
+  summary: >-
+    Discover, cart and check out binske products over the storefront's UCP/MCP
+    endpoint, stopping short of payment, which requires explicit contemporaneous
+    buyer approval.
+  operations:
+  - search_catalog
+  - lookup_catalog
+  - get_product
+  - create_cart
+  - get_cart
+  - update_cart
+  - cancel_cart
+  - create_checkout
+  - get_checkout
+  - update_checkout
+  - complete_checkout
+  - cancel_checkout
+  - get_order
+provider_published_skills:
+  found: false
+  probed:
+  - url: https://shopbinske.com/agents.md
+    status: 200
+    note: >-
+      Agent instructions, not a packaged skill. It defers packaged-skill duty to
+      Shopify's cross-store skill at https://shop.app/SKILL.md, which is
+      Shopify's artifact, not binske's, and is therefore not captured here.
+  - url: https://binske.com/llms.txt
+    status: 404

@@ -1,0 +1,74 @@
+generated: '2026-08-07'
+method: probed
+source: probe of binske.com and shopbinske.com /.well-known/*
+hosts:
+- host: https://shopbinske.com
+  role: storefront / agent-commerce surface (Shopify)
+  documents:
+  - path: /.well-known/ucp
+    status: 200
+    file: binske-ucp.json
+    note: >-
+      Universal Commerce Protocol merchant profile — supported versions, the
+      dev.ucp.shopping MCP endpoint, capability set, and payment handlers.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: binske-oauth-protected-resource.json
+    note: RFC 9728 protected-resource metadata pointing at the Shopify customer authorization server.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: binske-oauth-authorization-server.json
+    note: RFC 8414 authorization-server metadata (Shopify customer accounts) — PKCE S256, RS256 id_tokens.
+  - path: /.well-known/apple-app-site-association
+    status: 200
+    file: binske-apple-app-site-association.json
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  non_well_known:
+  - path: /llms.txt
+    status: 200
+    file: ../llms/binske-llms.txt
+  - path: /agents.md
+    status: 200
+    file: ../llms/binske-agents.md
+  - path: /robots.txt
+    status: 200
+    note: Carries Shopify agent-commerce directives and a no-automated-checkout rule.
+  - path: /products.json
+    status: 200
+    note: Shopify storefront product feed (platform default, not a documented binske API).
+- host: https://binske.com
+  role: brand website (WordPress)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  non_well_known:
+  - path: /llms.txt
+    status: 404
+  - path: /robots.txt
+    status: 200
+  - path: /wp-json/
+    status: 200
+    note: >-
+      WordPress core REST discovery document. Platform default exposed by the CMS,
+      not a binske developer API — recorded for completeness, not wired as an API.
+notes: >-
+  No security.txt on either host, so no SecurityTxt pointer is emitted. Neither
+  host serves an A2A agent card at the canonical or the legacy path, so no a2a/
+  artifact was written.

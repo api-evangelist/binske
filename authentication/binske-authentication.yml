@@ -1,0 +1,57 @@
+generated: '2026-08-07'
+method: probed
+source: https://shopbinske.com/.well-known/oauth-authorization-server
+docs: https://shopbinske.com/agents.md
+summary: >-
+  binske publishes no first-party authentication documentation. The one
+  authenticated surface on a binske-controlled host is the Shopify customer
+  account OAuth 2.0 / OpenID Connect stack advertised from the storefront's
+  well-known metadata, plus an anonymous read path on the UCP MCP endpoint.
+schemes:
+- name: anonymous
+  type: none
+  applies_to: https://shopbinske.com/api/ucp/mcp
+  note: >-
+    tools/list and catalog reads (search_catalog, lookup_catalog, get_product)
+    answered a 200 with no credentials on 2026-08-07.
+- name: shopify_customer_account
+  type: oauth2
+  flow: authorization_code
+  pkce:
+    supported: true
+    code_challenge_methods: [S256]
+  issuer: https://shopify.com/authentication/64216269035
+  authorization_endpoint: https://shopify.com/authentication/64216269035/oauth/authorize
+  token_endpoint: https://shopify.com/authentication/64216269035/oauth/token
+  end_session_endpoint: https://shopify.com/authentication/64216269035/logout
+  jwks_uri: https://shopify.com/authentication/64216269035/.well-known/jwks.json
+  token_endpoint_auth_methods: [client_secret_basic]
+  grant_types: [authorization_code, refresh_token, 'urn:ietf:params:oauth:grant-type:jwt-bearer']
+  response_types: [code]
+  bearer_methods: [header]
+  scopes: [openid, email, 'customer-account-api:full', 'customer-account-mcp-api:full']
+  protected_resource: https://shopbinske.com
+- name: openid_connect
+  type: openIdConnect
+  issuer: https://shopify.com/authentication/64216269035
+  id_token_signing_alg: [RS256]
+  subject_types: [public]
+  claims: [iss, sub, aud, exp, iat, nonce, sid, email, email_verified]
+buyer_approval:
+  required_for: [complete_checkout]
+  statement: >-
+    "Checkout requires human approval. Agents must not complete payment without
+    explicit buyer consent." — https://shopbinske.com/llms.txt
+x-evidence:
+  fetched: '2026-08-07'
+  probes:
+  - url: https://shopbinske.com/.well-known/oauth-authorization-server
+    http_status: 200
+  - url: https://shopbinske.com/.well-known/oauth-protected-resource
+    http_status: 200
+  - url: https://shopbinske.com/api/ucp/mcp
+    http_status: 200
+    note: anonymous tools/list
+x-gap: >-
+  The authorization server is Shopify's, not binske's. There is no binske
+  developer authentication page, no key issuance, and no first-party token model.
