@@ -3,20 +3,14 @@ method: probed
 source: https://shopbinske.com/api/ucp/mcp
 name: binske Storefront Commerce MCP Server
 status: live
-description: >-
-  Anonymous, publicly reachable MCP server on binske's own storefront host
-  (shopbinske.com), exposing the Universal Commerce Protocol (UCP) shopping
-  service. A JSON-RPC 2.0 `tools/list` call returned 200 with 13 tools and full
-  JSON Schema draft 2020-12 inputSchemas covering catalog search, catalog
-  lookup, product detail, cart lifecycle, checkout lifecycle, and order
-  retrieval.
-x-implementation: >-
-  This surface is Shopify-native. binske does not operate a developer program of
-  its own; the MCP endpoint, the UCP discovery document, and the agent-facing
-  markdown are emitted by the Shopify commerce platform on behalf of the store.
-  It is recorded here because it is genuinely served from a binske-controlled
-  host and is genuinely callable by an agent — not because binske publishes an
-  API product.
+description: Anonymous, publicly reachable MCP server on binske's own storefront host (shopbinske.com),
+  exposing the Universal Commerce Protocol (UCP) shopping service. A JSON-RPC 2.0 `tools/list` call returned
+  200 with 13 tools and full JSON Schema draft 2020-12 inputSchemas covering catalog search, catalog lookup,
+  product detail, cart lifecycle, checkout lifecycle, and order retrieval.
+x-implementation: This surface is Shopify-native. binske does not operate a developer program of its own;
+  the MCP endpoint, the UCP discovery document, and the agent-facing markdown are emitted by the Shopify
+  commerce platform on behalf of the store. It is recorded here because it is genuinely served from a
+  binske-controlled host and is genuinely callable by an agent — not because binske publishes an API product.
 transport: streamable-http
 protocol: mcp
 jsonrpc: '2.0'
@@ -28,10 +22,8 @@ agent_instructions:
 - https://shopbinske.com/llms.txt
 authentication:
   anonymous_read: true
-  note: >-
-    tools/list and catalog reads answered anonymously. Buyer-scoped operations
-    reference the Shopify customer-account authorization server advertised at
-    /.well-known/oauth-protected-resource.
+  note: tools/list and catalog reads answered anonymously. Buyer-scoped operations reference the Shopify
+    customer-account authorization server advertised at /.well-known/oauth-protected-resource.
   oauth_protected_resource: https://shopbinske.com/.well-known/oauth-protected-resource
   authorization_server: https://shopify.com/authentication/64216269035
 ucp:
@@ -61,59 +53,87 @@ tools:
 - name: search_catalog
   category: catalog
   description: Search for products from the online store using natural language.
-  required: [meta, catalog]
+  required:
+  - meta
+  - catalog
 - name: lookup_catalog
   category: catalog
   description: Look up multiple products or variants by identifier in a single request.
-  required: [meta, catalog]
+  required:
+  - meta
+  - catalog
 - name: get_product
   category: catalog
   description: Retrieve complete product detail by identifier, with variants and pricing.
-  required: [meta, catalog]
+  required:
+  - meta
+  - catalog
 - name: create_cart
   category: cart
   description: Creates a new cart.
-  required: [meta, cart]
+  required:
+  - meta
+  - cart
 - name: get_cart
   category: cart
   description: Get the cart contents.
-  required: [meta, id]
+  required:
+  - meta
+  - id
 - name: update_cart
   category: cart
   description: Perform updates to a cart.
-  required: [meta, cart, id]
+  required:
+  - meta
+  - cart
+  - id
 - name: cancel_cart
   category: cart
   description: Cancels a cart.
-  required: [meta, id]
+  required:
+  - meta
+  - id
 - name: create_checkout
   category: checkout
   description: Creates a checkout and returns line items, totals, discounts and taxes.
-  required: [meta, checkout]
+  required:
+  - meta
+  - checkout
 - name: get_checkout
   category: checkout
   description: Returns checkout detail including line items, totals, discounts and taxes.
-  required: [meta, id]
+  required:
+  - meta
+  - id
 - name: update_checkout
   category: checkout
   description: Updates a checkout (shipping address, method, buyer details).
-  required: [meta, checkout, id]
+  required:
+  - meta
+  - checkout
+  - id
 - name: complete_checkout
   category: checkout
-  description: >-
-    Completes a checkout and returns the order result. Accepts an
-    `meta.idempotency-key`. Requires explicit contemporaneous buyer approval.
-  required: [meta, checkout, id]
+  description: Completes a checkout and returns the order result. Accepts an `meta.idempotency-key`. Requires
+    explicit contemporaneous buyer approval.
+  required:
+  - meta
+  - checkout
+  - id
   idempotent: true
   idempotency_key_field: meta.idempotency-key
 - name: cancel_checkout
   category: checkout
   description: Cancels a checkout.
-  required: [meta, id]
+  required:
+  - meta
+  - id
 - name: get_order
   category: order
   description: Get the details of an order.
-  required: [meta, id]
+  required:
+  - meta
+  - id
 x-evidence:
   fetched: '2026-08-07'
   probes:
@@ -131,3 +151,9 @@ x-evidence:
     method: GET
     http_status: 200
     content_type: text/markdown; charset=utf-8
+deployment:
+  mode: remote
+  verified: searched
+  tools: 13
+  checked: '2026-08-12'
+  source: catalog MCP census
