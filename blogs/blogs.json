@@ -2,6 +2,13 @@
   "repo": "binske",
   "feeds": [
     {
+      "source": "https://binske.com/feed/",
+      "feed_url": "https://binske.com/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
       "source": "https://binske.com/explore/",
       "feed_url": "https://binske.com/feed/",
       "title": "",
@@ -9,6 +16,6 @@
       "method": "discovered"
     }
   ],
-  "post_count": 0,
-  "fetched": "2026-08-15T12:22:01Z"
+  "post_count": 7,
+  "fetched": "2026-08-22T20:20:02Z"
 }
