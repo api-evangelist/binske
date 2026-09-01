@@ -32,16 +32,16 @@ specificationVersion: '0.23'
 created: '2026-08-07'
 modified: '2026-08-07'
 tags:
-- cannabis
-- consumer-packaged-goods
-- direct-to-consumer
+- Cannabis
+- Consumer Packaged Goods
+- Direct to Consumer
 - E-Commerce
 - Retail
-- shopify
-- agent-commerce
+- Shopify
+- Agent Commerce
 - UCP
 - MCP
-- storefront
+- Storefront
 tags_raw:
 - cannabis
 - consumer-packaged-goods
@@ -67,12 +67,12 @@ apis:
   humanURL: https://shopbinske.com/agents.md
   baseURL: https://shopbinske.com/api/ucp/mcp
   tags:
-  - agent-commerce
+  - Agent Commerce
   - UCP
   - MCP
   - E-Commerce
-  - shopify
-  - cannabis
+  - Shopify
+  - Cannabis
   tags_raw:
   - agent-commerce
   - ucp
