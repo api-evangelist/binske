@@ -52,8 +52,8 @@ tags:
 - E-Commerce
 - Retail
 - Shopify
-- Agent Commerce
-- UCP
+- Agentic Commerce
+- Universal Commerce Protocol
 - MCP
 - Storefront
 tags_raw:
@@ -81,8 +81,8 @@ apis:
   humanURL: https://shopbinske.com/agents.md
   baseURL: https://shopbinske.com/api/ucp/mcp
   tags:
-  - Agent Commerce
-  - UCP
+  - Agentic Commerce
+  - Universal Commerce Protocol
   - MCP
   - E-Commerce
   - Shopify
